@@ -1,0 +1,17 @@
+.results{
+    width: 55%;
+    height: 100%;
+    overflow-y: scroll;
+    background-color: #eff8e294;
+    border-radius: 10px;
+    position: relative;
+}
+
+.results h1{
+    text-align: center;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+}

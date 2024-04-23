@@ -1,0 +1,47 @@
+.trackInfo{
+    width: 90%;
+}
+
+.track{
+    width: 85%;
+    height: 70px;
+    margin: 10px auto;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: flex;
+}
+
+.track h2{
+    padding: 0;
+    margin: 0;
+}
+
+.track h3{
+    margin-top: 10px;
+}
+
+.plusButton {
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.plusButton button{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    font-size: 1.5rem;
+    background-color: #1DB954;
+    color: white;
+    border-color: transparent;
+    text-align: center; 
+    line-height: 20px;
+}
+
+.plusButton button:hover{
+    background-color: #191414;
+}

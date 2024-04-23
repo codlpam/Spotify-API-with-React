@@ -1,0 +1,38 @@
+.form{
+    background-color: rgba(37, 36, 37, 0.692);
+    width: 30%;
+    height: 50px;
+    margin: 20px auto;
+    border-radius: 10px;
+    border: 2px solid rgba(145, 20, 177, 0.555);
+    display: flex;
+}
+
+.search{
+    background-color: transparent;
+    width: 90%;
+    height: 100%;
+    border-radius: 10px;
+    font-size: 1.3rem;
+    color: white;
+    padding-left: 10px;
+    border: transparent;
+}
+
+
+.search-button{
+    background-color: transparent;
+    font-size: 1.5rem;
+    width: 15%;
+    border: transparent;
+    width: 10%;
+    height: 100%;
+    transition: 200ms;
+    float: right;
+    color: white;
+}
+
+.search-button:hover{
+    font-size: 2rem;
+    transform: scale(1.5rem) ease-in-out;
+}
