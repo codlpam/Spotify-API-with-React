@@ -1,12 +1,21 @@
 .trackInfo{
+    padding-top: 4px;
     width: 90%;
+}
+
+.trackInfo h2{
+    font-size: 1.2rem;
+}
+
+.trackInfo h3{
+    font-size: 1rem;
 }
 
 .track{
     width: 85%;
     height: 70px;
     margin: 10px auto;
-    background-color: black;
+    background-color: rgba(104, 22, 105, 0.884);
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
@@ -22,14 +31,14 @@
     margin-top: 10px;
 }
 
-.plusButton {
+._button {
     width: 10%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.plusButton button{
+._button button{
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -42,6 +51,6 @@
     line-height: 20px;
 }
 
-.plusButton button:hover{
+._button button:hover{
     background-color: #191414;
 }

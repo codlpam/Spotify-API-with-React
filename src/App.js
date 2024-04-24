@@ -3,7 +3,7 @@ import './App.css';
 import Playlist from "./Components/Playlist/Playlist";
 import SearchBar from "./Components/SearchBar/SearchBar";
 import SearchResults from "./Components/SearchResults/SearchResults";
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 
 function App() {
 
@@ -19,13 +19,36 @@ function App() {
     { id: 9, songName: "Sweet Child o' Mine", artist: "Guns N' Roses", playlist: "Rock Anthems" },
     { id: 10, songName: "Wonderwall", artist: "Oasis", playlist: "Indie Favorites" }
   ])
+  const [playlist, setPlaylist] = useState([]);
+  const [playlistName, setPlaylistName] = useState('');
+
+  const addTrack = (track) => {
+    if (!playlist.some(item => item.id === track.id)) {
+      setPlaylist([...playlist, track]);
+      console.log('Track added to playlist:', track);
+      console.log('Updated playlist:', playlist); 
+    }
+  }
+
+  const removeTrack = (track) => {
+    const updatedPlaylist = playlist.filter(item => item.id !== track.id);
+    setPlaylist(updatedPlaylist);
+  }
+  
+  const updatePlaylistName = (name) => {
+    setPlaylistName(name);
+  }
   
   return (
     <div className="App">
       <SearchBar/>
       <div className="containers">
-        <SearchResults searchResults={searchResults}/>
-        <Playlist searchResults={searchResults}/>
+        <SearchResults searchResults={searchResults} onAdd={addTrack}/>
+        <Playlist 
+        playlist={playlist}
+        playlistName={playlistName}
+        onRemove={removeTrack}
+        onNameChange={updatePlaylistName}/>
       </div>
     </div>
   );
