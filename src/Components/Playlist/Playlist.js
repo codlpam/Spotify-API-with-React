@@ -8,11 +8,17 @@ function Playlist(props) {
         props.onNameChange(event.target.value);
     }
 
+    const handleSave = () => {
+        props.onSave();
+        // Clear the playlist name input field in the parent component
+        props.onNameChange('');
+    };
+
     return (
         <div className="playlistContainer">
             <div className="playlist"> 
                 <h1>Playlist</h1>
-                <input type="text" onChange={handleNameChange} className="playlistName" placeholder="Playlist Name"/>
+                <input type="text" value={props.playlistName} onChange={handleNameChange} className="playlistName" placeholder="Playlist Name"/>
                 <TrackList
                     tracks={props.playlist}
                     isAdded={true}
@@ -20,7 +26,7 @@ function Playlist(props) {
                 />
             </div>
             <div className="bottom">
-                <button onClick={props.onSave}>Add to Spotify</button>
+                <button onClick={handleSave}>Add to Spotify</button>
             </div>
             
         </div>

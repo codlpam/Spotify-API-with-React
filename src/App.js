@@ -6,7 +6,7 @@ import SearchResults from "./Components/SearchResults/SearchResults";
 
 import React, {useState} from 'react';
 
-var CLIENT_ID = 'replace with client id from spotify API';
+var CLIENT_ID = 'replace client id';
 const REDIRECT_URI = 'http://localhost:3000/'
 
 function App() {
@@ -103,19 +103,29 @@ function App() {
           album: track.album.name,
           uri: track.uri
       }));
-      setSearchResults(extractedTracks);
+      if (extractedTracks.length === 0) {
+        // If no tracks found, set a message in the search results
+          setSearchResults([{ id: 'no-results', name: 'No results found' }]);
+      } else {
+          setSearchResults(extractedTracks);
+      }
   }
   
 
   const addTrack = (track) => {
     if (!playlist.some(item => item.id === track.id)) {
       setPlaylist([...playlist, track]);
+
+      const updatedSearchResults = searchResults.filter(item => item.id !== track.id);
+      setSearchResults(updatedSearchResults);
     }
   }
 
   const removeTrack = (track) => {
     const updatedPlaylist = playlist.filter(item => item.id !== track.id);
     setPlaylist(updatedPlaylist);
+
+    setSearchResults([...searchResults, track]);
   }
   
   
