@@ -11,7 +11,7 @@ const TrackList = (props) => {
                     track={track}
                     key={track.id}
                     onAdd={props.onAdd}
-                    isRemoval={props.isRemoval}
+                    isAdded={props.isAdded}
                     onRemove={props.onRemove}
                 />
               )

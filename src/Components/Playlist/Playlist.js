@@ -10,18 +10,17 @@ function Playlist(props) {
 
     return (
         <div className="playlistContainer">
-
             <div className="playlist"> 
                 <h1>Playlist</h1>
                 <input type="text" onChange={handleNameChange} className="playlistName" placeholder="Playlist Name"/>
                 <TrackList
                     tracks={props.playlist}
-                    isRemoval={true}
-                    onRemove={props.onRemove}
+                    isAdded={true}
+                    onRemove={props.onRemove} 
                 />
             </div>
             <div className="bottom">
-                <button>Add to Spotify</button>
+                <button onClick={props.onSave}>Add to Spotify</button>
             </div>
             
         </div>

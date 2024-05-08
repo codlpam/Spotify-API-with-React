@@ -3,30 +3,113 @@ import './App.css';
 import Playlist from "./Components/Playlist/Playlist";
 import SearchBar from "./Components/SearchBar/SearchBar";
 import SearchResults from "./Components/SearchResults/SearchResults";
-import React, {useState, useCallback} from 'react';
+
+import React, {useState} from 'react';
+
+var CLIENT_ID = 'replace with client id from spotify API';
+const REDIRECT_URI = 'http://localhost:3000/'
 
 function App() {
 
-  const [searchResults, setSearchResults] = useState([
-    { id: 1, songName: "Bohemian Rhapsody", artist: "Queen", playlist: "Classic Hits" },
-    { id: 2, songName: "Shape of You", artist: "Ed Sheeran", playlist: "Top 40" },
-    { id: 3, songName: "Stairway to Heaven", artist: "Led Zeppelin", playlist: "Rock Classics" },
-    { id: 4, songName: "Billie Jean", artist: "Michael Jackson", playlist: "80s Groove" },
-    { id: 5, songName: "Rolling in the Deep", artist: "Adele", playlist: "Pop Hits" },
-    { id: 6, songName: "Hotel California", artist: "Eagles", playlist: "Classic Rock" },
-    { id: 7, songName: "Smells Like Teen Spirit", artist: "Nirvana", playlist: "90s Grunge" },
-    { id: 8, songName: "Uptown Funk", artist: "Mark Ronson ft. Bruno Mars", playlist: "Party Mix" },
-    { id: 9, songName: "Sweet Child o' Mine", artist: "Guns N' Roses", playlist: "Rock Anthems" },
-    { id: 10, songName: "Wonderwall", artist: "Oasis", playlist: "Indie Favorites" }
-  ])
+  const [searchResults, setSearchResults] = useState([])
   const [playlist, setPlaylist] = useState([]);
   const [playlistName, setPlaylistName] = useState('');
+  let accessToken;
+ 
+  
+  async function createToken() {
+    if (accessToken) {
+        return accessToken;
+    }
+
+    const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
+    if (accessTokenMatch) {
+        accessToken = accessTokenMatch[1];
+        return accessToken;
+    }
+
+    console.log('Redirecting to Spotify authorization URL');
+    const accessUrl = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&scope=playlist-modify-public&redirect_uri=${REDIRECT_URI}`;
+    window.location = accessUrl;
+  }
+      
+  async function createPlaylist() {
+      if(!playlistName || !playlist){
+        return;
+      } 
+      const accessToken = await createToken()
+      let userId;
+      let playlistId;
+      const trackUris = playlist.map((track) => track.uri);
+      try {
+          const response = await fetch('https://api.spotify.com/v1/me', {
+              headers: {
+                  Authorization: `Bearer ${accessToken}`,
+              },
+          }).then(response => response.json())
+          userId = response.id;
+          return await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+            method: 'POST',  
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name: playlistName})
+          }).then(response => response.json()
+        ).then(jsonReponse => {
+          playlistId = jsonReponse.id;
+          return fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${playlistId}/tracks`,{
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({uris: trackUris})
+          })
+        }).then(() => {
+          setPlaylist([]);
+          setPlaylistName('');
+        })
+          
+          
+      } catch (error) {
+          console.error('Error creating playlist:', error);
+      }
+  }
+
+  const updatePlaylistName = (name) => {
+    setPlaylistName(name);
+  } 
+  
+  async function search(searchInput) {
+      const accessToken = await createToken();
+      if (!accessToken) {
+          console.log('Access token not available. User needs to authorize first.');
+      }
+      const response = await fetch(`https://api.spotify.com/v1/search?q=${searchInput}&type=track`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      if (!response.ok) {
+          console.log('Failed to search for tracks');
+      }
+      const data = await response.json();
+      const topTracks = data.tracks.items.slice(0, 10);
+      const extractedTracks = topTracks.map(track => ({
+          id: track.id,
+          name: track.name,
+          artist: track.artists.map(artist => artist.name).join(', '),
+          album: track.album.name,
+          uri: track.uri
+      }));
+      setSearchResults(extractedTracks);
+  }
+  
 
   const addTrack = (track) => {
     if (!playlist.some(item => item.id === track.id)) {
       setPlaylist([...playlist, track]);
-      console.log('Track added to playlist:', track);
-      console.log('Updated playlist:', playlist); 
     }
   }
 
@@ -35,23 +118,22 @@ function App() {
     setPlaylist(updatedPlaylist);
   }
   
-  const updatePlaylistName = (name) => {
-    setPlaylistName(name);
-  }
   
   return (
     <div className="App">
-      <SearchBar/>
+      <SearchBar onSearch={search} />
       <div className="containers">
         <SearchResults searchResults={searchResults} onAdd={addTrack}/>
         <Playlist 
         playlist={playlist}
-        playlistName={playlistName}
+        playlistName={playlistName} 
         onRemove={removeTrack}
-        onNameChange={updatePlaylistName}/>
+        onNameChange={updatePlaylistName} 
+        onSave={createPlaylist} />
       </div>
     </div>
   );
 }
 
 export default App;
+

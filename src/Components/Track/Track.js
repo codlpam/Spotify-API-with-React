@@ -12,8 +12,8 @@ function Track(props){
     }
 
     const renderButton = () => {
-        if (props.isRemoval) {
-            return <button onClick={removeTrack}>-</button>;
+        if (props.isAdded) {
+            return <button onClick={removeTrack} style={{paddingBottom: 10}}>-</button>;
         } else {
             return <button onClick={addTrack}>+</button>;
         }
@@ -22,8 +22,8 @@ function Track(props){
     return (
         <div className="track">
             <div className="trackInfo">
-                <h2>{props.track.songName}</h2>
-                <h3>{props.track.artist}  |  {props.track.playlist}</h3>
+                <h2>{props.track.name}</h2>
+                <h3>{props.track.artist}  |  {props.track.album}</h3>
             </div>
             <div className="_button">
                 {renderButton()}
