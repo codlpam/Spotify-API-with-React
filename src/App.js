@@ -6,7 +6,7 @@ import SearchResults from "./Components/SearchResults/SearchResults";
 
 import React, {useState} from 'react';
 
-var CLIENT_ID = 'replace client id';
+var CLIENT_ID = 'replace with id';
 const REDIRECT_URI = 'http://localhost:3000/'
 
 function App() {
